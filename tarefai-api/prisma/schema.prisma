@@ -13,12 +13,18 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  user
+  admin
+}
+
 model User {
   id String @id @default(uuid())
   name String
   email String @unique
   password String
   tasks Task[]
+   role     Role     @default(user)
 }
 
 model Task {

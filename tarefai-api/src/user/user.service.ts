@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user-dto';
 import { BadRequestException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user-sto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -14,15 +15,26 @@ export class UserService {
     });
 
     if (existingUser) {
-        throw new BadRequestException('Email já cadastrado');
+        throw new BadRequestException('Email já cadastrado.');
     }
 
     if (data.password.includes(data.name) || data.password.includes(data.email)) {
         throw new BadRequestException('A senha não pode conter nome ou email.');
     }
+    
+    const hashedPassword = await bcrypt.hash(data.password, 8)
 
-    const user = await this.prisma.user.create({ data });
-    return user;
+    const user = await this.prisma.user.create({
+        data: {
+            ...data, password: hashedPassword
+        }
+    });
+
+    const {password, ...userWithoutPassword} = user //separa a senha do resto para não exibir
+    return {
+        message: `Olá, ${user.name}, seu usuário foi criado com sucesso, aqui estão os seus dados:`,
+        data: userWithoutPassword
+    }
      
     }
 
@@ -31,7 +43,8 @@ export class UserService {
     }
 
     async readOne(id: string) {
-        return await this.prisma.user.findUnique({ where: { id } });
+        return await this.prisma.user.findUnique({where: {id}})
+         
     }
 
     async updateOne(id: string, updateUserDto: UpdateUserDto) {
@@ -49,6 +62,16 @@ export class UserService {
     }   
 
      async deleteOne(id: string) {
+                  if (!id) {
+    throw new BadRequestException("ID do usuário é obrigatório.");
+  }
+
+        const userExcluded = await this.prisma.user.findUnique({where: {id}})
+
+        if (!userExcluded) {
+            throw new BadRequestException("Este usuário não existe ou já foi excluído.")
+        }
+
         return await this.prisma.user.delete({
             where: { id },
         });
