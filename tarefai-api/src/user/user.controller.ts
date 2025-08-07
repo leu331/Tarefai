@@ -17,7 +17,7 @@ export class UserController {
 
   @Get()
   async readAll(@User('role') role: string) {
-    if(role !== 'ADMIN'){
+    if(role !== 'admin'){
       throw new ForbiddenException('Acesso negado.');
     }
     return await this.userService.readAll();
@@ -30,9 +30,7 @@ export class UserController {
     @User('role') role: string
   ) {
     if(role !== 'ADMIN' && id !== userId){
-      console.log('id param:', id);
-console.log('userId from token:', userId);
-console.log('role from token:', role);
+     
       throw new ForbiddenException('Você só pode acessar seu próprio perfil.');
       
     }
@@ -43,10 +41,13 @@ console.log('role from token:', role);
   async updateOne(
     @Param("id") id: string, 
     @Body() updateUserDto: UpdateUserDto,
-    @User('userId') userId: string, 
+    @User('id') userId: string, 
     @User('role') role: string
   ) {
     if(role !== 'ADMIN' && id !== userId){
+       console.log('id param:', id);
+console.log('userId from token:', userId);
+console.log('role from token:', role);
       throw new ForbiddenException('Você só pode atualizar seu próprio perfil.');
     }
     return await this.userService.updateOne(id, updateUserDto)
@@ -55,7 +56,7 @@ console.log('role from token:', role);
   @Delete(":id")
   async deleteOne(
     @Param("id") id: string, 
-    @User('userId') userId: string, 
+    @User('id') userId: string, 
     @User('role') role: string
   ) {
     if(role !== 'ADMIN' && id !== userId){

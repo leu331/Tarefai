@@ -7,7 +7,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  @HttpCode(HttpStatus.OK) // Para o retorno ser 200 e não 201 (default do POST)
+  @HttpCode(HttpStatus.OK) // Para o retorno ser 200 e não 201 
   async login(@Body() loginDto: LoginDto) {
     const token = await this.authService.login(loginDto);
     return {
