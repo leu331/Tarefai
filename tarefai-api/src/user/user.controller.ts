@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get, Param, Put, Delete, UseGuards, ForbiddenException } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user-dto';
-import { UpdateUserDto } from './dto/update-user-sto';
+import { CreateUserDto } from './dto/create.user.dto';
+import { UpdateUserDto } from './dto/update.user.dto';
 import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { User } from './user.decorator';
 
