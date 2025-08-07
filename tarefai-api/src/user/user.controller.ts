@@ -29,7 +29,7 @@ export class UserController {
     @User('id') userId: string, 
     @User('role') role: string
   ) {
-    if(role !== 'ADMIN' && id !== userId){
+    if(role !== 'admin' && id !== userId){
      
       throw new ForbiddenException('Você só pode acessar seu próprio perfil.');
       
@@ -44,7 +44,7 @@ export class UserController {
     @User('id') userId: string, 
     @User('role') role: string
   ) {
-    if(role !== 'ADMIN' && id !== userId){
+    if(role !== 'admin' && id !== userId){
        console.log('id param:', id);
 console.log('userId from token:', userId);
 console.log('role from token:', role);
@@ -59,7 +59,7 @@ console.log('role from token:', role);
     @User('id') userId: string, 
     @User('role') role: string
   ) {
-    if(role !== 'ADMIN' && id !== userId){
+    if(role !== 'admin' && id !== userId){
       throw new ForbiddenException('Você só pode deletar seu próprio perfil.');
     }
     return await this.userService.deleteOne(id) 

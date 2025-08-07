@@ -30,7 +30,7 @@ export class AuthService {
   async login(data: LoginDto) {
     const user = await this.validateUser(data.email, data.password); //valida para saber se email e senha estão corretos
 
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.id, role: user.role, name: user.name, email: user.email };
 
     return { //aqui eu retorno as infos do usuário autenticado
       access_token: this.jwtService.sign(payload),
